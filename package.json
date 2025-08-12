@@ -1,0 +1,12 @@
+{
+  "name": "lab01-nhom27",
+  "version": "1.0.0",
+  "description": "Static Web Server, HTTP Client, Network Monitoring",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}

@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Du Lịch Đà Lạt</string>
+    <string name="title_activity_main">Du Lịch Đà Lạt</string>
+    <string name="package_name">com.dulichdalat.app</string>
+    <string name="custom_url_scheme">com.dulichdalat.app</string>
+</resources>

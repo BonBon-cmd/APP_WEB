@@ -1,0 +1,26 @@
+<ion-content [fullscreen]="true" class="ion-padding">
+  <div class="register-container">
+    <h1 class="title">Register</h1>
+
+    <div class="form-container">
+      <ion-item lines="none" class="input-item">
+        <ion-label position="stacked">Email</ion-label>
+        <ion-input type="email" placeholder="Value" [(ngModel)]="email"></ion-input>
+      </ion-item>
+
+      <ion-item lines="none" class="input-item">
+        <ion-label position="stacked">Password</ion-label>
+        <ion-input type="password" placeholder="Value" [(ngModel)]="password"></ion-input>
+      </ion-item>
+
+      <ion-item lines="none" class="input-item">
+        <ion-label position="stacked">Phone Number</ion-label>
+        <ion-input type="tel" placeholder="Value" [(ngModel)]="phoneNumber"></ion-input>
+      </ion-item>
+
+      <ion-button expand="block" class="register-btn" (click)="register()">
+        Register
+      </ion-button>
+    </div>
+  </div>
+</ion-content>

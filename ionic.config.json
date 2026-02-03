@@ -1,0 +1,7 @@
+{
+  "name": "Du Lịch Đà Lạt",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular-standalone"
+}

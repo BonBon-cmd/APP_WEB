@@ -1,26 +1,56 @@
-<ion-content [fullscreen]="true" class="ion-padding">
-  <div class="register-container">
-    <h1 class="title">Register</h1>
+<ion-content [fullscreen]="true" scrollY="false">
+  <div class="register-wrapper">
+    <!-- Background Image -->
+    <div class="bg-image">
+      <img src="assets/images/register.jpeg" alt="Background">
+    </div>
 
-    <div class="form-container">
-      <ion-item lines="none" class="input-item">
-        <ion-label position="stacked">Email</ion-label>
-        <ion-input type="email" placeholder="Value" [(ngModel)]="email"></ion-input>
-      </ion-item>
+    <!-- Content -->
+    <div class="register-content">
+      <!-- Title -->
+      <h1 class="page-title">Register</h1>
 
-      <ion-item lines="none" class="input-item">
-        <ion-label position="stacked">Password</ion-label>
-        <ion-input type="password" placeholder="Value" [(ngModel)]="password"></ion-input>
-      </ion-item>
+      <!-- Form -->
+      <div class="form-container">
+        <div class="input-group">
+          <label>FULL NAME</label>
+          <ion-input type="text" placeholder="Nguyễn Văn A" [(ngModel)]="fullName"></ion-input>
+        </div>
 
-      <ion-item lines="none" class="input-item">
-        <ion-label position="stacked">Phone Number</ion-label>
-        <ion-input type="tel" placeholder="Value" [(ngModel)]="phoneNumber"></ion-input>
-      </ion-item>
+        <div class="input-group">
+          <label>EMAIL</label>
+          <ion-input type="email" placeholder="example@gmail.com" [(ngModel)]="email"></ion-input>
+        </div>
 
-      <ion-button expand="block" class="register-btn" (click)="register()">
-        Register
-      </ion-button>
+        <div class="input-group">
+          <label>PASSWORD</label>
+          <ion-input type="password" placeholder="••••••••" [(ngModel)]="password"></ion-input>
+        </div>
+
+        <div class="input-group">
+          <label>PHONE NUMBER</label>
+          <ion-input type="tel" placeholder="0123 456 789" [(ngModel)]="phoneNumber"></ion-input>
+        </div>
+
+        <div class="input-group">
+          <label>ROLE</label>
+          <ion-select interface="popover" [(ngModel)]="role">
+            <ion-select-option value="user">User</ion-select-option>
+            <ion-select-option value="admin">Admin</ion-select-option>
+          </ion-select>
+        </div>
+
+        <p class="error-message" *ngIf="errorMessage">{{ errorMessage }}</p>
+
+        <ion-button expand="block" class="register-btn" (click)="register()">
+          {{ isSubmitting ? 'Đang tạo tài khoản...' : 'Sign Up' }}
+        </ion-button>
+
+        <div class="login-link">
+          <span>Already have an account? </span>
+          <a (click)="goToLogin()">Login</a>
+        </div>
+      </div>
     </div>
   </div>
 </ion-content>

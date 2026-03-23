@@ -1,24 +1,57 @@
-<ion-content [fullscreen]="true" class="ion-padding">
-  <div class="login-container">
-    <h1 class="title">Hello everyone</h1>
+<ion-content [fullscreen]="true" scrollY="false">
+  <div class="login-wrapper">
+    <!-- Background Image -->
+    <div class="bg-image">
+      <img src="assets/images/login.jpg" alt="Background">
+    </div>
 
-    <div class="form-container">
-      <ion-item lines="none" class="input-item">
-        <ion-label position="stacked">Email</ion-label>
-        <ion-input type="email" placeholder="Value" [(ngModel)]="email"></ion-input>
-      </ion-item>
+    <!-- Content -->
+    <div class="login-content">
+      <!-- Logo -->
+      <div class="logo-container">
+        <div class="logo-circle">
+          <img src="assets/icon/Icon_app.png" alt="CoffeStay">
+        </div>
+        <h1 class="app-name">CoffeStay</h1>
+      </div>
 
-      <ion-item lines="none" class="input-item">
-        <ion-label position="stacked">Password</ion-label>
-        <ion-input type="password" placeholder="Value" [(ngModel)]="password"></ion-input>
-      </ion-item>
+      <!-- Form -->
+      <div class="form-container">
+        <div class="location-permission">
+          <button class="location-btn" (click)="requestLocationPermission()">
+            {{ locationPermission === 'granted' ? 'Da cap quyen vi tri' : 'Cho phep truy cap vi tri' }}
+          </button>
+        </div>
 
-      <ion-button expand="block" class="login-btn" (click)="login()">
-        Sign In
-      </ion-button>
+        <div class="input-group">
+          <label>EMAIL</label>
+          <ion-input type="email" placeholder="example@gmail.com" [(ngModel)]="email"></ion-input>
+        </div>
 
-      <div class="forgot-password">
-        <a (click)="forgotPassword()">Forgot password?</a>
+        <div class="input-group">
+          <label>PASSWORD</label>
+          <ion-input type="password" placeholder="••••••••" [(ngModel)]="password"></ion-input>
+        </div>
+
+        <div class="forgot-password">
+          <a (click)="forgotPassword()">Forgot your password?</a>
+        </div>
+
+        <p class="error-message" *ngIf="errorMessage">{{ errorMessage }}</p>
+        <p class="info-message" *ngIf="infoMessage">{{ infoMessage }}</p>
+
+        <ion-button expand="block" class="login-btn" (click)="login()">
+          {{ isSubmitting ? 'Đang đăng nhập...' : 'Login' }}
+        </ion-button>
+
+        <ion-button expand="block" fill="outline" class="google-btn" (click)="loginWithGoogle()">
+          {{ isGoogleSubmitting ? 'Dang dang nhap Google...' : 'Dang nhap bang Google' }}
+        </ion-button>
+
+        <div class="register-link">
+          <span>Don't have an account? </span>
+          <a (click)="goToRegister()">Sign Up</a>
+        </div>
       </div>
     </div>
   </div>

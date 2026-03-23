@@ -1,0 +1,109 @@
+<ion-content [fullscreen]="true">
+  <div class="profile-container">
+    <p class="status-message" *ngIf="isLoading">Đang tải hồ sơ...</p>
+    <p class="error-message" *ngIf="errorMessage">{{ errorMessage }}</p>
+    <p class="success-message" *ngIf="successMessage">{{ successMessage }}</p>
+
+    <!-- Profile View -->
+    <div class="profile-view" *ngIf="!isEditing && !isLoading">
+      <!-- Header with Avatar -->
+      <div class="profile-header">
+        <div class="avatar-section">
+          <div class="avatar">
+            <img [src]="user.avatar" alt="Avatar">
+          </div>
+          <div class="user-info">
+            <h2 class="user-name">{{user.name}}</h2>
+            <p class="user-gender">{{user.gender}} | Quyền: {{ user.role }}</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Menu Card -->
+      <div class="menu-card">
+        <div class="menu-item" (click)="openEditProfile()">
+          <ion-icon name="create-outline"></ion-icon>
+          <span>Chỉnh sửa thông tin</span>
+          <ion-icon name="chevron-forward-outline" class="arrow"></ion-icon>
+        </div>
+        <div class="menu-item" (click)="openGuide()">
+          <ion-icon name="compass-outline"></ion-icon>
+          <span>Hướng dẫn sử dụng</span>
+          <ion-icon name="chevron-forward-outline" class="arrow"></ion-icon>
+        </div>
+        <div class="menu-item" (click)="openTerms()">
+          <ion-icon name="document-text-outline"></ion-icon>
+          <span>Điều khoản</span>
+          <ion-icon name="chevron-forward-outline" class="arrow"></ion-icon>
+        </div>
+      </div>
+
+      <!-- Logout Button -->
+      <button class="logout-btn" (click)="logout()">
+        Logout
+      </button>
+    </div>
+
+    <!-- Edit Profile View -->
+    <div class="edit-view" *ngIf="isEditing && !isLoading">
+      <!-- Header with Avatar -->
+      <div class="edit-header">
+        <input
+          #avatarInput
+          type="file"
+          accept="image/*"
+          class="avatar-file-input"
+          (change)="onAvatarSelected($event)">
+        <div class="avatar-section">
+          <div class="avatar">
+            <img [src]="user.avatar" alt="Avatar">
+          </div>
+          <div class="user-info">
+            <p class="label">Tên</p>
+            <button class="change-avatar-btn" (click)="changeAvatar()" [disabled]="isUpdatingAvatar">
+              {{ isUpdatingAvatar ? 'Đang cập nhật...' : 'Đổi avatar' }}
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Edit Form Card -->
+      <div class="form-card">
+        <div class="form-group">
+          <label>Họ tên</label>
+          <input type="text" [(ngModel)]="editForm.name" placeholder="Nhập họ tên">
+        </div>
+
+        <div class="form-group">
+          <label>Email</label>
+          <input type="email" [(ngModel)]="editForm.email" placeholder="Nhập email">
+        </div>
+
+        <div class="form-group">
+          <label>Giới tính</label>
+          <input type="text" [(ngModel)]="editForm.gender" placeholder="Nam/Nữ/Khác">
+        </div>
+
+        <div class="form-group">
+          <label>Ngày sinh</label>
+          <input type="text" [(ngModel)]="editForm.birthday" placeholder="DD/MM/YYYY">
+        </div>
+
+        <div class="form-group">
+          <label>Phone Number</label>
+          <input type="tel" [(ngModel)]="editForm.phone" placeholder="Nhập số điện thoại">
+        </div>
+
+        <button class="submit-btn" (click)="saveProfile()">
+          Xác nhận thông tin
+        </button>
+      </div>
+
+      <!-- Back Button -->
+      <button class="back-btn" (click)="cancelEdit()">
+        <ion-icon name="arrow-back"></ion-icon>
+        Quay lại
+      </button>
+    </div>
+  </div>
+</ion-content>

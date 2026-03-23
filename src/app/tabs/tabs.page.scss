@@ -1,0 +1,44 @@
+ion-tab-bar {
+  --background: #ffffff;
+  border-top: none;
+  padding: 8px 4px 12px;
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.08);
+  border-radius: 20px 20px 0 0;
+}
+
+ion-tab-button {
+  --color: #9ca3af;
+  --color-selected: #a0826d;
+  --padding-top: 8px;
+  --padding-bottom: 8px;
+  overflow: visible;
+
+  ion-icon {
+    font-size: 26px;
+  }
+
+  ion-label {
+    font-size: 11px;
+    font-weight: 500;
+    margin-top: 4px;
+    white-space: nowrap;
+    overflow: visible;
+  }
+
+  // Active state with highlight background
+  &.tab-selected {
+    --color-selected: #a0826d;
+    background: rgba(160, 130, 109, 0.1);
+    border-radius: 12px;
+    margin: 4px 2px;
+
+    ion-icon {
+      font-size: 28px;
+    }
+
+    ion-label {
+      font-weight: 600;
+    }
+  }
+}
+

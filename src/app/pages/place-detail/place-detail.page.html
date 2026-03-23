@@ -1,0 +1,197 @@
+<ion-content [fullscreen]="true">
+  <div class="detail-container">
+    <!-- Hero Image Section -->
+    <div class="hero-section">
+      <div class="hero-image" [style.background-image]="'url(' + place.image + ')'">
+        <div class="hero-overlay">
+          <!-- Top Actions -->
+          <div class="top-actions">
+            <button class="action-btn back-btn" (click)="goBack()">
+              <ion-icon name="arrow-back"></ion-icon>
+            </button>
+            <div class="right-actions">
+              <button class="action-btn" (click)="toggleFavorite()">
+                <ion-icon [name]="isFavorite ? 'heart' : 'heart-outline'"></ion-icon>
+              </button>
+              <button class="action-btn">
+                <ion-icon name="share-social-outline"></ion-icon>
+              </button>
+            </div>
+          </div>
+
+          <!-- Image Gallery Dots -->
+          <div class="gallery-dots">
+            <span *ngFor="let img of place.gallery; let i = index"
+                  class="dot"
+                  [class.active]="i === currentImageIndex"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Place Info Card -->
+    <div class="info-card">
+      <div class="place-header">
+        <div class="place-title-section">
+          <span class="place-type">{{place.type}}</span>
+          <h1 class="place-name">{{place.name}}</h1>
+          <div class="place-rating-row">
+            <div class="rating">
+              <ion-icon name="star"></ion-icon>
+              <span class="rating-value">{{place.rating}}</span>
+              <span class="rating-count">({{place.reviewCount}} đánh giá)</span>
+            </div>
+            <span class="distance">
+              <ion-icon name="location-outline"></ion-icon>
+              {{place.distance}}
+            </span>
+          </div>
+        </div>
+        <div class="price-tag" *ngIf="place.price">
+          <span class="price">{{place.price}}</span>
+          <span class="price-unit">/{{place.priceUnit}}</span>
+        </div>
+      </div>
+
+      <!-- Quick Info -->
+      <div class="quick-info">
+        <div class="info-item">
+          <ion-icon name="time-outline"></ion-icon>
+          <div class="info-text">
+            <span class="info-label">Giờ mở cửa</span>
+            <span class="info-value">{{place.openTime}}</span>
+          </div>
+        </div>
+        <div class="info-item">
+          <ion-icon name="call-outline"></ion-icon>
+          <div class="info-text">
+            <span class="info-label">Liên hệ</span>
+            <span class="info-value">{{place.phone}}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Address & Directions -->
+      <div class="address-section">
+        <div class="address-info">
+          <ion-icon name="location"></ion-icon>
+          <span>{{place.address}}</span>
+        </div>
+        <button class="directions-btn" (click)="openDirections()">
+          <ion-icon name="navigate"></ion-icon>
+          Chỉ đường
+        </button>
+      </div>
+
+      <!-- Description -->
+      <div class="description-section">
+        <h3>Giới thiệu</h3>
+        <p [class.expanded]="descriptionExpanded">{{place.description}}</p>
+        <button class="read-more" (click)="toggleDescription()">
+          {{descriptionExpanded ? 'Thu gọn' : 'Xem thêm'}}
+        </button>
+      </div>
+
+      <!-- Amenities -->
+      <div class="amenities-section">
+        <h3>Tiện nghi</h3>
+        <div class="amenities-grid">
+          <div class="amenity-item" *ngFor="let amenity of place.amenities">
+            <ion-icon [name]="amenity.icon"></ion-icon>
+            <span>{{amenity.name}}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Reviews Section -->
+      <div class="reviews-section">
+        <div class="reviews-header">
+          <div class="title-wrap">
+            <h3>Đánh giá từ Google Maps</h3>
+            <span class="source-pill">Google Maps</span>
+          </div>
+          <button class="see-all-btn" [disabled]="isLoadingGoogleReviews" (click)="loadGoogleMapReviews()">
+            {{ isLoadingGoogleReviews ? 'Dang cap nhat...' : 'Cap nhat' }}
+          </button>
+        </div>
+
+        <p class="reviews-note" *ngIf="hasLiveGoogleReviews">
+          Du lieu dang hien thi duoc dong bo truc tiep tu Google Maps.
+        </p>
+        <p class="reviews-error" *ngIf="googleReviewsError">
+          {{ googleReviewsError }}
+        </p>
+
+        <!-- Rating Summary -->
+        <div class="rating-summary">
+          <div class="rating-big">
+            <span class="rating-number">{{place.rating}}</span>
+            <div class="rating-stars">
+              <ion-icon *ngFor="let star of [1,2,3,4,5]"
+                        [name]="star <= place.rating ? 'star' : (star - 0.5 <= place.rating ? 'star-half' : 'star-outline')">
+              </ion-icon>
+            </div>
+            <span class="total-reviews">{{place.reviewCount}} đánh giá trên Google Maps</span>
+          </div>
+          <div class="rating-bars">
+            <div class="rating-bar" *ngFor="let bar of ratingBars">
+              <span class="bar-label">{{bar.stars}}</span>
+              <ion-icon name="star"></ion-icon>
+              <div class="bar-track">
+                <div class="bar-fill" [style.width]="bar.percentage + '%'"></div>
+              </div>
+              <span class="bar-count">{{bar.count}}</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Review List -->
+        <div class="reviews-list">
+          <div class="review-card" *ngFor="let review of reviews">
+            <div class="review-header">
+              <div class="reviewer-info">
+                <img [src]="review.avatar" alt="Avatar" class="reviewer-avatar">
+                <div class="reviewer-details">
+                  <span class="reviewer-name">{{review.name}}</span>
+                  <span class="review-date">{{review.date}}</span>
+                </div>
+              </div>
+              <div class="review-rating">
+                <ion-icon name="star" *ngFor="let s of [1,2,3,4,5]; let i = index"
+                          [class.filled]="i < review.rating"></ion-icon>
+              </div>
+            </div>
+            <h4 class="review-title">{{review.title}}</h4>
+            <p class="review-content">{{review.content}}</p>
+            <p class="review-source">Nguồn: {{review.source}}</p>
+            <div class="review-images" *ngIf="review.images?.length">
+              <img *ngFor="let img of review.images" [src]="img" alt="Review image">
+            </div>
+            <div class="review-actions">
+              <button class="helpful-btn" type="button" disabled>
+                <ion-icon name="thumbs-up-outline"></ion-icon>
+                Hữu ích ({{review.helpfulCount}})
+              </button>
+            </div>
+          </div>
+
+          <div class="reviews-empty" *ngIf="!isLoadingGoogleReviews && reviews.length === 0">
+            <p>Chua co du lieu review cho dia diem nay. Bam Cap nhat sau khi da cau hinh Google Places API key.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bottom Action Bar -->
+  <div class="bottom-bar">
+    <div class="price-info" *ngIf="place.price">
+      <span class="label">Giá từ</span>
+      <span class="value">{{place.price}}</span>
+    </div>
+    <button class="book-btn" (click)="openDirections()">
+      <ion-icon name="navigate"></ion-icon>
+      Chỉ đường
+    </button>
+  </div>
+</ion-content>

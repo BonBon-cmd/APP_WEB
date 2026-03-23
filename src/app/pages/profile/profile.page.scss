@@ -1,0 +1,286 @@
+// Variables
+$primary-color: #a0826d;
+$primary-dark: #7a5f4e;
+$text-dark: #1a1a2e;
+$text-light: #6b7280;
+$text-muted: #9ca3af;
+$bg-light: #f8f9fa;
+$white: #ffffff;
+$danger: #ef4444;
+$border-color: #e5e7eb;
+
+.profile-container {
+  background: $bg-light;
+  min-height: 100vh;
+  padding-bottom: 100px;
+}
+
+.status-message,
+.error-message,
+.success-message {
+  margin: 16px 20px 0;
+  font-size: 13px;
+}
+
+.status-message {
+  color: $text-light;
+}
+
+.error-message {
+  color: $danger;
+}
+
+.success-message {
+  color: #16a34a;
+}
+
+// Profile View
+.profile-view {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+}
+
+// Header
+.profile-header,
+.edit-header {
+  width: 100%;
+  padding: 50px 20px 30px;
+  display: flex;
+  justify-content: center;
+}
+
+.avatar-section {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.avatar {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 3px solid $primary-color;
+  box-shadow: 0 4px 15px rgba($primary-color, 0.3);
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+.user-info {
+  display: flex;
+  flex-direction: column;
+
+  .user-name {
+    font-size: 20px;
+    font-weight: 700;
+    color: $text-dark;
+    margin: 0 0 4px;
+  }
+
+  .user-gender {
+    font-size: 14px;
+    color: $text-light;
+    margin: 0;
+  }
+
+  .label {
+    font-size: 14px;
+    color: $text-light;
+    margin: 0 0 4px;
+  }
+}
+
+.change-avatar-btn {
+  background: none;
+  border: none;
+  color: $primary-color;
+  font-size: 15px;
+  font-weight: 600;
+  padding: 0;
+  cursor: pointer;
+  text-align: left;
+
+  &:active {
+    opacity: 0.7;
+  }
+
+  &:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+  }
+}
+
+.avatar-file-input {
+  display: none;
+}
+
+// Menu Card
+.menu-card {
+  width: 100%;
+  max-width: 400px;
+  background: $white;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+  margin-top: 20px;
+}
+
+.menu-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 18px 20px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+  border-bottom: 1px solid $border-color;
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  &:active {
+    background: $bg-light;
+  }
+
+  ion-icon {
+    font-size: 22px;
+    color: $text-dark;
+  }
+
+  span {
+    flex: 1;
+    font-size: 15px;
+    color: $text-dark;
+  }
+
+  .arrow {
+    font-size: 18px;
+    color: $text-muted;
+  }
+}
+
+// Logout Button
+.logout-btn {
+  margin-top: 40px;
+  background: $danger;
+  color: $white;
+  border: none;
+  padding: 14px 48px;
+  border-radius: 25px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:active {
+    transform: scale(0.95);
+    opacity: 0.9;
+  }
+}
+
+// Edit View
+.edit-view {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+}
+
+.edit-header {
+  padding-top: 50px;
+}
+
+// Form Card
+.form-card {
+  width: 100%;
+  max-width: 400px;
+  background: $white;
+  border-radius: 16px;
+  padding: 24px 20px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+}
+
+.form-group {
+  margin-bottom: 20px;
+
+  &:last-of-type {
+    margin-bottom: 24px;
+  }
+
+  label {
+    display: block;
+    font-size: 14px;
+    font-weight: 500;
+    color: $text-dark;
+    margin-bottom: 8px;
+  }
+
+  input {
+    width: 100%;
+    padding: 14px 16px;
+    border: 1px solid $border-color;
+    border-radius: 10px;
+    font-size: 15px;
+    color: $text-dark;
+    background: $bg-light;
+    transition: all 0.2s ease;
+
+    &::placeholder {
+      color: $text-muted;
+    }
+
+    &:focus {
+      outline: none;
+      border-color: $primary-color;
+      background: $white;
+      box-shadow: 0 0 0 3px rgba($primary-color, 0.1);
+    }
+  }
+}
+
+.submit-btn {
+  width: 100%;
+  background: linear-gradient(135deg, $primary-color, $primary-dark);
+  color: $white;
+  border: none;
+  padding: 16px;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:active {
+    transform: scale(0.98);
+    opacity: 0.9;
+  }
+}
+
+// Back Button
+.back-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 20px;
+  background: none;
+  border: none;
+  color: $text-light;
+  font-size: 15px;
+  cursor: pointer;
+  padding: 10px 20px;
+
+  ion-icon {
+    font-size: 20px;
+  }
+
+  &:active {
+    color: $text-dark;
+  }
+}

@@ -1,0 +1,85 @@
+<ion-content [fullscreen]="true" scrollY="false" class="location-content">
+  <div class="location-map-page">
+    <section class="map-card">
+      <div
+        #mapContainer
+        class="map-frame"
+        title="Bản đồ địa điểm"
+      ></div>
+
+      <div class="map-error" *ngIf="mapLoadError">
+        {{ mapLoadError }}
+      </div>
+
+      <div class="map-overlay">
+        <div class="top-controls">
+          <div class="search-box">
+            <ion-icon name="search-outline"></ion-icon>
+            <input
+              type="text"
+              placeholder="Tìm quán hoặc khu vực"
+              [(ngModel)]="searchText"
+              (ngModelChange)="applyFilters()"
+            />
+          </div>
+
+          <button class="locate-btn" (click)="centerToCurrentOrDefault()">
+            <ion-icon name="navigate-outline"></ion-icon>
+          </button>
+        </div>
+      </div>
+
+      <section class="navigation-panel" *ngIf="selectedPlace">
+        <div class="destination-select-row" *ngIf="filteredPlaces.length > 0">
+          <label for="destinationSelect">Điểm đến</label>
+          <select
+            id="destinationSelect"
+            [ngModel]="selectedPlace.id"
+            (ngModelChange)="selectPlaceById($event)">
+            <option *ngFor="let place of filteredPlaces" [ngValue]="place.id">
+              {{ place.name }}
+            </option>
+          </select>
+        </div>
+
+        <div class="destination-row">
+          <div>
+            <p class="label">Đang chọn</p>
+            <h3>{{ selectedPlace.name }}</h3>
+            <p class="address">
+              <ion-icon name="flag-outline"></ion-icon>
+              {{ selectedPlace.address }}
+            </p>
+          </div>
+          <button class="start-btn" *ngIf="!isNavigating" (click)="promptNavigationConfirm()">
+            <ion-icon name="walk-outline"></ion-icon>
+            Bắt đầu
+          </button>
+          <button class="stop-btn" *ngIf="isNavigating" (click)="stopNavigation()">
+            <ion-icon name="close-circle-outline"></ion-icon>
+            Dừng
+          </button>
+        </div>
+
+        <div class="navigation-status" *ngIf="isNavigating && navigationSummary">
+          <p>{{ navigationSummary.instruction }}</p>
+          <div class="meta">
+            <span>Khoảng cách: {{ navigationSummary.distanceKm }} km</span>
+            <span>Dự kiến: {{ navigationSummary.etaMinutes }} phút</span>
+            <span>Tốc độ: {{ navigationSummary.speedKmh }} km/h</span>
+          </div>
+          <p class="speed-note" *ngIf="navigationSummary.speedSource === 'default'">
+            Đang dùng tốc độ mặc định do thiết bị chưa lấy được tốc độ di chuyển hiện tại.
+          </p>
+        </div>
+      </section>
+
+      <section class="empty-state" *ngIf="filteredPlaces.length === 0">
+        <ion-icon name="location-outline"></ion-icon>
+        <h3>Không có kết quả</h3>
+        <p>Thử tìm kiếm khác.</p>
+      </section>
+    </section>
+
+  </div>
+</ion-content>

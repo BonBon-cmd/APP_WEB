@@ -1,20 +1,121 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>
-      Blank
-    </ion-title>
-  </ion-toolbar>
-</ion-header>
-
 <ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Blank</ion-title>
-    </ion-toolbar>
-  </ion-header>
+  <div class="home-container">
+    <!-- Header -->
+    <div class="header">
+      <div class="header-top">
+        <div class="user-info">
+          <div class="avatar">
+            <img [src]="userAvatar" alt="Avatar">
+          </div>
+          <div class="greeting">
+            <p class="welcome-text">Xin chào! 👋</p>
+            <h2 class="user-name">{{ userName }}</h2>
+          </div>
+        </div>
+        <div class="header-actions">
+          <div class="action-btn has-badge">
+            <ion-icon name="notifications-outline"></ion-icon>
+            <span class="badge">3</span>
+          </div>
+        </div>
+      </div>
 
-  <div id="container">
-    <strong>Ready to create an app?</strong>
-    <p>Start with Ionic <a target="_blank" rel="noopener noreferrer" href="https://ionicframework.com/docs/components">UI Components</a></p>
+      <!-- Search Bar -->
+      <div class="search-container">
+        <ion-icon name="search-outline" class="search-icon"></ion-icon>
+        <ion-input
+          placeholder="Tìm homestay, quán cafe..."
+          [(ngModel)]="searchText"
+          class="search-input">
+        </ion-input>
+      </div>
+    </div>
+
+    <!-- Banner Slider -->
+    <div class="banner-section">
+      <swiper-container
+        [slidesPerView]="1.15"
+        [spaceBetween]="12"
+        [centeredSlides]="false"
+        [pagination]="{ clickable: true }">
+        <swiper-slide *ngFor="let banner of banners">
+          <div class="banner-card" [style.background-image]="'url(' + banner.image + ')'">
+            <div class="banner-overlay">
+              <span class="banner-tag">{{banner.tag}}</span>
+              <h3 class="banner-title">{{banner.title}}</h3>
+              <p class="banner-subtitle">{{banner.subtitle}}</p>
+            </div>
+          </div>
+        </swiper-slide>
+      </swiper-container>
+    </div>
+
+    <!-- Featured Homestays -->
+    <div class="popular-section">
+      <div class="section-header">
+        <h3>Homestay</h3>
+        <a class="see-all">See all</a>
+      </div>
+      <swiper-container
+        [slidesPerView]="1.5"
+        [spaceBetween]="16"
+        [centeredSlides]="false"
+        class="homestay-swiper">
+        <swiper-slide *ngFor="let homestay of filteredHomestays">
+          <div class="place-card" (click)="openPlaceDetail(homestay, 'homestay')">
+            <div class="place-image" [style.background-image]="'url(' + homestay.image + ')'">
+              <div class="place-rating">
+                <ion-icon name="star"></ion-icon>
+                <span>{{homestay.rating}}</span>
+              </div>
+              <ion-icon name="heart-outline" class="favorite-btn"></ion-icon>
+            </div>
+            <div class="place-info">
+              <h4>{{homestay.name}}</h4>
+              <p class="place-location">
+                <ion-icon name="location-outline"></ion-icon>
+                {{homestay.location}}
+              </p>
+              <p class="place-price">{{homestay.price}}</p>
+              <button class="direction-btn" (click)="openDirections(homestay, 'homestay', $event)">
+                <ion-icon name="navigate-outline"></ion-icon>
+                Chỉ đường
+              </button>
+            </div>
+          </div>
+        </swiper-slide>
+      </swiper-container>
+    </div>
+
+    <!-- Recommended Cafes -->
+    <div class="recommended-section">
+      <div class="section-header">
+        <h3>Quán Cafe</h3>
+        <a class="see-all">See all</a>
+      </div>
+      <div class="cafe-list">
+        <div class="cafe-card" *ngFor="let cafe of filteredCafes" (click)="openPlaceDetail(cafe, 'cafe')">
+          <div class="cafe-image" [style.background-image]="'url(' + cafe.image + ')'"></div>
+          <div class="cafe-info">
+            <h4>{{cafe.name}}</h4>
+            <p class="cafe-address">{{cafe.address}}</p>
+            <div class="cafe-meta">
+              <span class="cafe-rating">
+                <ion-icon name="star"></ion-icon>
+                {{cafe.rating}}
+              </span>
+              <span class="cafe-time">
+                <ion-icon name="time-outline"></ion-icon>
+                {{cafe.openTime}}
+              </span>
+            </div>
+            <button class="direction-btn" (click)="openDirections(cafe, 'cafe', $event)">
+              <ion-icon name="navigate-outline"></ion-icon>
+              Chỉ đường
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </ion-content>

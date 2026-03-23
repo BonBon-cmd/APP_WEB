@@ -24,6 +24,7 @@
 @import "@ionic/angular/css/text-alignment.css";
 @import "@ionic/angular/css/text-transformation.css";
 @import "@ionic/angular/css/flex-utils.css";
+@import "leaflet/dist/leaflet.css";
 
 /**
  * Ionic Dark Mode
@@ -35,3 +36,17 @@
 /* @import "@ionic/angular/css/palettes/dark.always.css"; */
 /* @import "@ionic/angular/css/palettes/dark.class.css"; */
 @import '@ionic/angular/css/palettes/dark.system.css';
+
+// Fix ion-input focus behavior
+ion-input {
+  --highlight-height: 0;
+
+  &.has-focus {
+    --highlight-height: 0;
+  }
+}
+
+// Prevent keyboard scroll issues
+ion-content {
+  --keyboard-offset: 0 !important;
+}

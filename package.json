@@ -7,9 +7,18 @@
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
+    "build:web": "ng build --configuration production",
+    "deploy:web": "npm run build:web && npx firebase-tools deploy --only hosting",
+    "serve:hosting": "npx firebase-tools emulators:start --only hosting",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "lint": "ng lint"
+    "lint": "ng lint",
+    "seed:firebase": "node scripts/seed-firestore.mjs",
+    "import:google-cafes": "node scripts/import-google-cafes.mjs",
+    "import:google-homestays": "node scripts/import-google-homestays.mjs",
+    "sync:place-map": "node scripts/sync-google-place-map.mjs",
+    "sync:google-reviews": "node scripts/sync-google-place-map.mjs",
+    "sync:google-reviews:all": "node scripts/sync-google-place-map.mjs --all"
   },
   "private": true,
   "dependencies": {
@@ -28,8 +37,12 @@
     "@capacitor/keyboard": "8.0.0",
     "@capacitor/status-bar": "8.0.0",
     "@ionic/angular": "^8.0.0",
+    "@types/leaflet": "^1.9.21",
+    "firebase": "^12.11.0",
     "ionicons": "^7.0.0",
+    "leaflet": "^1.9.4",
     "rxjs": "~7.8.0",
+    "swiper": "^12.1.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.15.0"
   },

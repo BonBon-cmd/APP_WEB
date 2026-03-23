@@ -1,0 +1,552 @@
+import { initializeApp } from 'firebase/app';
+import { getFirestore, writeBatch, doc, serverTimestamp } from 'firebase/firestore';
+
+const firebaseConfig = {
+  apiKey: 'AIzaSyDBNCnuL8lXyIxwoo3pgO6dclDutbmORPI',
+  authDomain: 'tks-app-bec0c.firebaseapp.com',
+  projectId: 'tks-app-bec0c',
+  storageBucket: 'tks-app-bec0c.firebasestorage.app',
+  messagingSenderId: '38358063830',
+  appId: '1:38358063830:web:f0777fd9ba4cd768284777',
+  measurementId: 'G-3YH7MR03D6',
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+const users = [
+  {
+    id: 'user_001',
+    fullName: 'Tran Minh An',
+    email: 'an.tran@example.com',
+    role: 'user',
+    phone: '0901000001',
+    city: 'Da Lat',
+    favoriteCafeIds: ['cafe_001', 'cafe_003'],
+    favoriteHomestayIds: ['home_001'],
+    status: 'active',
+  },
+  {
+    id: 'user_002',
+    fullName: 'Le Bao Ngoc',
+    email: 'ngoc.le@example.com',
+    role: 'user',
+    phone: '0901000002',
+    city: 'Ho Chi Minh',
+    favoriteCafeIds: ['cafe_002'],
+    favoriteHomestayIds: ['home_002', 'home_004'],
+    status: 'active',
+  },
+  {
+    id: 'user_003',
+    fullName: 'Pham Quang Huy',
+    email: 'huy.pham@example.com',
+    role: 'user',
+    phone: '0901000003',
+    city: 'Ha Noi',
+    favoriteCafeIds: ['cafe_004'],
+    favoriteHomestayIds: ['home_003'],
+    status: 'active',
+  },
+];
+
+const admins = [
+  {
+    id: 'admin_001',
+    fullName: 'Nguyen Thu Ha',
+    email: 'admin@tks-app.com',
+    role: 'admin',
+    phone: '0901999999',
+    permissions: ['manage_users', 'manage_cafes', 'manage_homestays', 'manage_bookings'],
+    status: 'active',
+  },
+];
+
+const cafes = [
+  {
+    id: 'cafe_001',
+    name: 'Tiem Ca Phe Thong Reo',
+    slug: 'tiem-ca-phe-thong-reo',
+    city: 'Da Lat',
+    address: '21 Khe Sanh, Phuong 10, Da Lat',
+    styleTags: ['dalat', 'pine-forest', 'minimal', 'indie'],
+    chainBrand: false,
+    popularChain: false,
+    rating: 4.8,
+    priceRange: '70000-150000',
+    openTime: '07:00-22:00',
+    contactPhone: '02633999001',
+    description: 'Cafe nho tren doi thong, khong gian yen tinh, nhac nhe va ban cong nhin xuong thung lung.',
+    heroImage: 'assets/images/login.jpg',
+    imageGallery: ['assets/images/login.jpg', 'assets/images/register.jpeg'],
+    amenities: ['view-thung-lung', 'outdoor-seating', 'wifi', 'parking-motorbike'],
+    isFeatured: true,
+    status: 'active',
+  },
+  {
+    id: 'cafe_002',
+    name: 'Moc Suong Coffee Atelier',
+    slug: 'moc-suong-coffee-atelier',
+    city: 'Da Lat',
+    address: '8 Huynh Tan Phat, Phuong 11, Da Lat',
+    styleTags: ['dalat', 'atelier', 'wood', 'slowbar'],
+    chainBrand: false,
+    popularChain: false,
+    rating: 4.7,
+    priceRange: '60000-130000',
+    openTime: '06:30-21:30',
+    contactPhone: '02633999002',
+    description: 'Khong gian go thong, phong cach xuong nghe, phu hop chill va lam viec nhe.',
+    heroImage: 'assets/images/register.jpeg',
+    imageGallery: ['assets/images/register.jpeg', 'assets/images/login.jpg'],
+    amenities: ['slowbar', 'wifi', 'socket', 'pet-friendly'],
+    isFeatured: true,
+    status: 'active',
+  },
+  {
+    id: 'cafe_003',
+    name: 'Gac Hanh Mua Cafe',
+    slug: 'gac-hanh-mua-cafe',
+    city: 'Da Lat',
+    address: '45 Duong Len Trang, Phuong 3, Da Lat',
+    styleTags: ['dalat', 'attic', 'vintage', 'acoustic'],
+    chainBrand: false,
+    popularChain: false,
+    rating: 4.9,
+    priceRange: '80000-160000',
+    openTime: '08:00-23:00',
+    contactPhone: '02633999003',
+    description: 'Quan gac mai nho, den vang am, dem co acoustic va tra hoa nong.',
+    heroImage: 'assets/images/login.jpg',
+    imageGallery: ['assets/images/login.jpg', 'assets/images/register.jpeg'],
+    amenities: ['acoustic-night', 'outdoor-seating', 'wifi'],
+    isFeatured: true,
+    status: 'active',
+  },
+  {
+    id: 'cafe_004',
+    name: 'Nha Ben Doc Coffee',
+    slug: 'nha-ben-doc-coffee',
+    city: 'Da Lat',
+    address: '12 Doc Nha Bo, Phuong 5, Da Lat',
+    styleTags: ['dalat', 'hidden-gem', 'garden', 'sunrise-view'],
+    chainBrand: false,
+    popularChain: false,
+    rating: 4.6,
+    priceRange: '50000-120000',
+    openTime: '06:00-20:30',
+    contactPhone: '02633999004',
+    description: 'Quan nho ben doc, nhieu cay xanh, dep vao som va chieu muon.',
+    heroImage: 'assets/images/register.jpeg',
+    imageGallery: ['assets/images/register.jpeg', 'assets/images/login.jpg'],
+    amenities: ['garden', 'sunrise-view', 'parking-motorbike'],
+    isFeatured: false,
+    status: 'active',
+  },
+  {
+    id: 'cafe_real_001',
+    name: 'The Wilder Nest',
+    slug: 'the-wilder-nest',
+    city: 'Da Lat',
+    address: 'Ho Tuyen Lam, Phuong 4, Da Lat, Lam Dong',
+    styleTags: ['dalat', 'nature', 'chill', 'sunset-view'],
+    chainBrand: false,
+    popularChain: false,
+    rating: 4.6,
+    priceRange: '70000-150000',
+    openTime: '08:00-18:00',
+    contactPhone: 'Updating...',
+    description: 'Quan cafe noi tieng o Da Lat voi view nui rung ho Tuyen Lam, khong gian mo, yen tinh, rat phu hop chill va ngam hoang hon.',
+    heroImage: 'https://example.com/wilder-nest-main.jpg',
+    imageGallery: [
+      'https://example.com/wilder-nest-1.jpg',
+      'https://example.com/wilder-nest-2.jpg',
+      'https://example.com/wilder-nest-3.jpg',
+    ],
+    amenities: ['view-nui', 'view-ho', 'outdoor-seating', 'wifi', 'parking-motorbike', 'photo-spots'],
+    location: {
+      lat: 11.9043,
+      lng: 108.4419,
+    },
+    isFeatured: true,
+    status: 'active',
+  },
+  {
+    id: 'cafe_real_002',
+    name: 'Cafe Dũng Bụi',
+    slug: 'cafe-dung-bui',
+    city: 'Da Lat',
+    address: '56 Đường Tôn Thất Tùng, Phường 8, Thành phố Đà Lạt, Lâm Đồng, Việt Nam',
+    styleTags: ['dalat', 'local', 'specialty-coffee', 'cozy'],
+    chainBrand: false,
+    popularChain: false,
+    rating: 4.9,
+    priceRange: '10000-100000',
+    openTime: '06:30-18:00',
+    contactPhone: '+84933934868',
+    description: 'Quan cafe moc mac, khong gian am cung, phu hop thuong thuc ca phe chat luong o trung tam Da Lat.',
+    heroImage: 'https://lh3.googleusercontent.com/gps-cs-s/AHVAwepxpvSEUwrEsgndcHwr8tx22XvOM6lpJhZkGsRjdIG2SsBo1DSKjvRQoFHOAvV_xy0ZRafarC0fARRJEUuvTj_C3x_IpDVA2_MyzWAGVHdWgEKGjmJU2X5CeyEg6Jm0XWYGDJEUZ0RF9Uof=w408-h272-k-no',
+    imageGallery: [],
+    amenities: ['outdoor-seating', 'wifi', 'pet-friendly', 'table-service'],
+    location: {
+      lat: 11.9659555,
+      lng: 108.4356739,
+    },
+    isFeatured: true,
+    status: 'active',
+  },
+  {
+    id: 'cafe_real_003',
+    name: 'Là Việt Coffee',
+    slug: 'la-viet-coffee',
+    city: 'Da Lat',
+    address: '200 Nguyễn Công Trứ, Phường 8, Thành phố Đà Lạt, Lâm Đồng 66000, Việt Nam',
+    styleTags: ['dalat', 'roastery', 'specialty', 'modern'],
+    chainBrand: false,
+    popularChain: true,
+    rating: 4.5,
+    priceRange: '10000-100000',
+    openTime: '07:00-22:00',
+    contactPhone: '+842633981189',
+    description: 'Dia diem ca phe noi tieng tai Da Lat voi khong gian rong, menu da dang va luong review lon tren Google Maps.',
+    heroImage: 'https://lh3.googleusercontent.com/gps-cs-s/AHVAweoDyI4zAsidV-HUsZt8QNxXd49N1l5-Hcf1FUET0YtlNqOkVE0Y1jVne3DVrWjHziti-S1c1y5cKrnUd_eJ2LBPQuc-Z7BZrDDiwUUq6EzxNngkDZa00hskEAke1CURKviyrVdNNPxIO21r=w408-h306-k-no',
+    imageGallery: [],
+    amenities: ['wifi', 'parking', 'takeaway', 'table-service'],
+    location: {
+      lat: 11.9567925,
+      lng: 108.4350921,
+    },
+    isFeatured: true,
+    status: 'active',
+  },
+  {
+    id: 'cafe_real_004',
+    name: 'S Coffee Roastery',
+    slug: 's-coffee-roastery',
+    city: 'Da Lat',
+    address: '56 Đường Tôn Thất Tùng, Phường 8, Đà Lạt, Lâm Đồng, Việt Nam',
+    styleTags: ['dalat', 'roastery', 'specialty', 'quiet'],
+    chainBrand: false,
+    popularChain: false,
+    rating: 4.8,
+    priceRange: '10000-100000',
+    openTime: '07:00-18:00',
+    contactPhone: '+84933934868',
+    description: 'Quan roastery phong cach toi gian, phu hop lam viec, thuong thuc hand-brew va latte chat luong cao.',
+    heroImage: 'https://lh3.googleusercontent.com/gps-cs-s/AHVAwer7tgDDseSHCqdK9GAdWph7n4GbseukK5lVS8R0wuO9ncD-plSkIQI01GbGWO85sSBRHCBFaSQGbC9CD_brSvNmu2RYQwrYIkyWitwqnSJiQLqYHOfG6iN5Y-VjE0W_xn1mVoyfRjjFdRqW=w408-h272-k-no',
+    imageGallery: [],
+    amenities: ['wifi', 'outdoor-seating', 'pet-friendly', 'parking'],
+    location: {
+      lat: 11.9660072,
+      lng: 108.4355842,
+    },
+    isFeatured: true,
+    status: 'active',
+  },
+  {
+    id: 'cafe_real_005',
+    name: 'Vườn Sen Coffee',
+    slug: 'vuon-sen-coffee',
+    city: 'Da Lat',
+    address: '92 Đường Cao Bá Quát, Phường 7, Đà Lạt, Lâm Đồng, Việt Nam',
+    styleTags: ['dalat', 'garden', 'quiet', 'photo-spots'],
+    chainBrand: false,
+    popularChain: false,
+    rating: 4.7,
+    priceRange: '10000-100000',
+    openTime: '07:30-17:30',
+    contactPhone: '+84919448363',
+    description: 'Quan cafe vuon co khong gian nhieu cay canh, yen tinh va thoang mat, phu hop chill va chup anh.',
+    heroImage: 'https://lh3.googleusercontent.com/gps-cs-s/AHVAwepQKKONYOUiKkbHibmLSnC9UQwXUT6ggISNDstZPHekWsRaUzHNtl3yjhp5vaT5ooTnG23aNWU7IlCYhppmXZ1IMP6OJzPbTda2svTlljrwtt2-EFWrWatIC9hPgP0Tp7HA1ItC=w426-h240-k-no',
+    imageGallery: [],
+    amenities: ['garden', 'outdoor-seating', 'parking', 'pet-friendly'],
+    location: {
+      lat: 11.9625341,
+      lng: 108.431621,
+    },
+    isFeatured: true,
+    status: 'active',
+  },
+  {
+    id: 'cafe_real_006',
+    name: 'Tiệm cafe Người Thương Ơi',
+    slug: 'tiem-cafe-nguoi-thuong-oi',
+    city: 'Da Lat',
+    address: 'Phường 8, Thành phố Đà Lạt, Lâm Đồng, Việt Nam',
+    styleTags: ['dalat', 'garden', 'sunset', 'romantic'],
+    chainBrand: false,
+    popularChain: false,
+    rating: 4.6,
+    priceRange: '10000-100000',
+    openTime: '07:00-22:00',
+    contactPhone: '+84789445679',
+    description: 'Tiem cafe phong cach vuon nhiet doi thu nho, view hoang hon dep, phu hop thu gian va chup anh.',
+    heroImage: 'https://lh3.googleusercontent.com/gps-cs-s/AHVAwerGE7f6BWcs51-2RrdjDdVTnZ1J3p-OwbrdkJLjhCNJwoIDQCEmwxXdITwfDNIU4U8H9NDvS_2HKwmAOeBDONlE4MkmEL4g6Hmi1G9lSx737mJvKoMAEkJmRDgz9ZVo4UD2lHpktg=w408-h544-k-no',
+    imageGallery: [],
+    amenities: ['outdoor-seating', 'parking', 'table-service', 'pet-friendly'],
+    location: {
+      lat: 11.9714612,
+      lng: 108.4366082,
+    },
+    isFeatured: true,
+    status: 'active',
+  },
+];
+
+const googleReviewCaches = [
+  {
+    appId: 11,
+    placeResourceName: 'places/ChIJTSU0UWoTcTERj_2WUIYU9zU',
+    rating: 4.9,
+    reviewCount: 30,
+    reviews: [
+      {
+        authorName: 'Đăng Khoa “Raymond Phạm”',
+        authorPhotoUri: 'https://lh3.googleusercontent.com/a-/ALV-UjWoKFHAAG8y2MdHsqJ-Cag4kaW49LoOAaGi5-15LKIhro_x42B1=s1920-c-rp-mo-ba2-br100',
+        rating: 5,
+        publishTime: '2024-05-26T14:11:35.999Z',
+        relativePublishTimeDescription: 'một năm trước',
+        text: 'Best coffee in town!!!. Lần đầu được uống ly Americano đá ngon nhất cuộc đời.',
+      },
+      {
+        authorName: 'Peter Darling',
+        authorPhotoUri: 'https://lh3.googleusercontent.com/a-/ALV-UjUuYJZgeg2kmvuVkyQLpcEfyvnV7P-GCT44G9ZTa3DFU5d9xTJh=s1920-c-rp-mo-ba4-br100',
+        rating: 5,
+        publishTime: '2024-05-05T14:33:16.011Z',
+        relativePublishTimeDescription: 'một năm trước',
+        text: 'Good quality coffee and nice place to sit. Best latte I\'ve had in months.',
+      },
+    ],
+  },
+  {
+    appId: 3,
+    placeResourceName: 'places/ChIJuZxn7NAScTERQB4WFRsQ3Wk',
+    rating: 4.5,
+    reviewCount: 3329,
+    reviews: [
+      {
+        authorName: '陳元平',
+        authorPhotoUri: 'https://lh3.googleusercontent.com/a-/ALV-UjUfqL9rtV1Qv50fGMWYz2cpF57RW6B-TCgjxSye2sugIQNaul-K=s1920-c-rp-mo-ba6-br100',
+        rating: 5,
+        publishTime: '2026-03-18T00:50:27.413Z',
+        relativePublishTimeDescription: '5 ngày trước',
+        text: 'Có 2603 người đến đó. Cà phê ngon, trang trí đẹp.',
+      },
+      {
+        authorName: 'Đại Nghĩa Trần',
+        authorPhotoUri: 'https://lh3.googleusercontent.com/a-/ALV-UjWyA0ahPFaYDo1zDyZO5uRGBwr42PSaCn2lqqSC9q5dptAEeXKB=s1920-c-rp-mo-ba2-br100',
+        rating: 5,
+        publishTime: '2026-03-13T05:06:56.366Z',
+        relativePublishTimeDescription: 'một tuần trước',
+        text: 'Không gian đẹp, cold brew siêu ngon.',
+      },
+    ],
+  },
+  {
+    appId: 12,
+    placeResourceName: 'places/ChIJzTYGMDoTcTER_P86xsmFeLg',
+    rating: 4.8,
+    reviewCount: 324,
+    reviews: [
+      {
+        authorName: 'Hong Quang Nguyen',
+        authorPhotoUri: 'https://lh3.googleusercontent.com/a-/ALV-UjVDONIc1jkabqXKTkfX7JhsvfRrPiiS3iVsC_YvHJpwf13c9p8A=s1920-c-rp-mo-ba5-br100',
+        rating: 5,
+        publishTime: '2026-03-22T14:24:33.332Z',
+        relativePublishTimeDescription: '11 giờ trước',
+        text: 'Cà phê rất chất lượng, hand-brew tinh tế và không gian yên tĩnh.',
+      },
+      {
+        authorName: 'Sofie Boscheck',
+        authorPhotoUri: 'https://lh3.googleusercontent.com/a/ACg8ocIz1pdDFmTMW-Q0ZkQ9uBNro6nnY7mrLPXZHSV2HKOoOcO0gg=s1920-c-rp-mo-br100',
+        rating: 5,
+        publishTime: '2026-03-21T15:05:14.976Z',
+        relativePublishTimeDescription: '1 ngày trước',
+        text: 'Cà phê ngon khó cưỡng và bánh croissant cũng vậy.',
+      },
+    ],
+  },
+  {
+    appId: 13,
+    placeResourceName: 'places/ChIJ8375_n0TcTERf_KnBIjhK4E',
+    rating: 4.7,
+    reviewCount: 229,
+    reviews: [
+      {
+        authorName: 'Huỳnh Thị Ngọc Nhi',
+        authorPhotoUri: 'https://lh3.googleusercontent.com/a/ACg8ocIYzd0APm_6KGaDfmNYCF88DgCxRI3UqYor_jxlvBtw227UV7Gv=s1920-c-rp-mo-ba2-br100',
+        rating: 5,
+        publishTime: '2026-03-15T05:00:21.515Z',
+        relativePublishTimeDescription: 'một tuần trước',
+        text: 'Nước ngon, không gian yên tĩnh, nhiều góc chụp đẹp.',
+      },
+      {
+        authorName: '정진주',
+        authorPhotoUri: 'https://lh3.googleusercontent.com/a-/ALV-UjXt6M1nUGd5SQiDO3YwnnVAsJVCvB2aaLr8jUzJ6mkUIvAmN5E=s1920-c-rp-mo-br100',
+        rating: 5,
+        publishTime: '2025-10-20T05:29:56.988Z',
+        relativePublishTimeDescription: '5 tháng trước',
+        text: 'Quán đẹp, nhiều sen đá và xương rồng, đồ uống giá hợp lý.',
+      },
+    ],
+  },
+  {
+    appId: 14,
+    placeResourceName: 'places/ChIJlY79uNMTcTERVYjheksxPKs',
+    rating: 4.6,
+    reviewCount: 809,
+    reviews: [
+      {
+        authorName: 'Babii.f3b',
+        authorPhotoUri: 'https://lh3.googleusercontent.com/a-/ALV-UjW5k7-smy_m3-B2-u5747N6WCICF4lABNSdg9s2UeYiPqUT8Mc=s1920-c-rp-mo-ba2-br100',
+        rating: 5,
+        publishTime: '2026-03-09T11:04:47.513Z',
+        relativePublishTimeDescription: 'một tuần trước',
+        text: 'Quán siêu xinh, nhiều hoa và cảnh đẹp để chụp hình.',
+      },
+      {
+        authorName: 'Còn',
+        authorPhotoUri: 'https://lh3.googleusercontent.com/a-/ALV-UjUtnquFz0JqRzc06BtHVE_Gcr5LdebFGiqar6qccJ1Xo5sSDYU=s1920-c-rp-mo-ba2-br100',
+        rating: 5,
+        publishTime: '2026-02-26T04:09:08.220Z',
+        relativePublishTimeDescription: '3 tuần trước',
+        text: 'Decor đẹp, không gian yên tĩnh, nhân viên chu đáo.',
+      },
+    ],
+  },
+];
+
+const homestays = [
+  {
+    id: 'home_001',
+    name: 'Nha Tren Doi Thong',
+    slug: 'nha-tren-doi-thong',
+    city: 'Da Lat',
+    address: '72 Trieu Viet Vuong, Phuong 4, Da Lat',
+    styleTags: ['dalat', 'pine-view', 'cozy', 'minimal'],
+    rating: 4.9,
+    pricePerNight: 950000,
+    contactPhone: '02633888001',
+    checkIn: '14:00',
+    checkOut: '12:00',
+    roomTypes: ['double', 'family'],
+    maxGuests: 6,
+    description: 'Can nha nho giua doi thong, bua sang don gian va khong gian am cung.',
+    heroImage: 'assets/images/login.jpg',
+    imageGallery: ['assets/images/login.jpg', 'assets/images/register.jpeg'],
+    amenities: ['bbq', 'kitchen', 'heating', 'mountain-view'],
+    isFeatured: true,
+    status: 'active',
+  },
+  {
+    id: 'home_002',
+    name: 'Suong Som Retreat',
+    slug: 'suong-som-retreat',
+    city: 'Da Lat',
+    address: '19 Ngo Thi Sy, Phuong 4, Da Lat',
+    styleTags: ['dalat', 'foggy-morning', 'quiet', 'wood-house'],
+    rating: 4.8,
+    pricePerNight: 780000,
+    contactPhone: '02633888002',
+    checkIn: '14:00',
+    checkOut: '11:30',
+    roomTypes: ['double', 'dorm'],
+    maxGuests: 8,
+    description: 'Retreat nho trong hem yen tinh, buoi sang nhieu suong va view doi.',
+    heroImage: 'assets/images/register.jpeg',
+    imageGallery: ['assets/images/register.jpeg', 'assets/images/login.jpg'],
+    amenities: ['shared-kitchen', 'garden', 'motorbike-rent'],
+    isFeatured: true,
+    status: 'active',
+  },
+  {
+    id: 'home_003',
+    name: 'Tiem Nha Nho Pine',
+    slug: 'tiem-nha-nho-pine',
+    city: 'Da Lat',
+    address: '5 Le Hong Phong, Phuong 4, Da Lat',
+    styleTags: ['dalat', 'small-house', 'vintage', 'green-yard'],
+    rating: 4.7,
+    pricePerNight: 680000,
+    contactPhone: '02633888003',
+    checkIn: '13:30',
+    checkOut: '11:30',
+    roomTypes: ['double'],
+    maxGuests: 4,
+    description: 'Nha go vintage, san vuon nho, phu hop cap doi va nhom ban than.',
+    heroImage: 'assets/images/login.jpg',
+    imageGallery: ['assets/images/login.jpg', 'assets/images/register.jpeg'],
+    amenities: ['garden', 'coffee-corner', 'pet-friendly'],
+    isFeatured: false,
+    status: 'active',
+  },
+  {
+    id: 'home_004',
+    name: 'Doc May Hideout',
+    slug: 'doc-may-hideout',
+    city: 'Da Lat',
+    address: '34 Khe Sanh, Phuong 10, Da Lat',
+    styleTags: ['dalat', 'cloud-hunting', 'hill-side', 'sunrise'],
+    rating: 4.8,
+    pricePerNight: 1100000,
+    contactPhone: '02633888004',
+    checkIn: '14:00',
+    checkOut: '12:00',
+    roomTypes: ['double', 'family', 'bungalow'],
+    maxGuests: 10,
+    description: 'Homestay tren doc cao, dep luc binh minh, phu hop san may cuoi tuan.',
+    heroImage: 'assets/images/register.jpeg',
+    imageGallery: ['assets/images/register.jpeg', 'assets/images/login.jpg'],
+    amenities: ['bonfire', 'mountain-view', 'breakfast', 'parking-car'],
+    isFeatured: true,
+    status: 'active',
+  },
+];
+
+function setCollection(batch, collectionName, data) {
+  for (const item of data) {
+    const ref = doc(db, collectionName, item.id);
+    batch.set(ref, {
+      ...item,
+      createdAt: serverTimestamp(),
+      updatedAt: serverTimestamp(),
+    });
+  }
+}
+
+function setGoogleReviewCaches(batch, data) {
+  for (const item of data) {
+    const ref = doc(db, 'shared_google_place_reviews', String(item.appId));
+    batch.set(ref, {
+      ...item,
+      syncedAtIso: item.syncedAtIso ?? new Date().toISOString(),
+      createdAt: serverTimestamp(),
+      updatedAt: serverTimestamp(),
+    });
+  }
+}
+
+async function seedFirestore() {
+  const batch = writeBatch(db);
+
+  setCollection(batch, 'users', users);
+  setCollection(batch, 'admins', admins);
+  setCollection(batch, 'cafes', cafes);
+  setCollection(batch, 'homestays', homestays);
+  setGoogleReviewCaches(batch, googleReviewCaches);
+
+  await batch.commit();
+
+  console.log('Seed Firestore thanh cong.');
+  console.log('- users:', users.length);
+  console.log('- admins:', admins.length);
+  console.log('- cafes:', cafes.length);
+  console.log('- homestays:', homestays.length);
+  console.log('- shared_google_place_reviews:', googleReviewCaches.length);
+}
+
+seedFirestore().catch((error) => {
+  console.error('Seed Firestore that bai:');
+  console.error(error);
+  process.exit(1);
+});

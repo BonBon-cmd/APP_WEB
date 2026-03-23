@@ -1,0 +1,73 @@
+<ion-content [fullscreen]="true">
+  <div class="bookmark-container">
+    <!-- Header -->
+    <div class="header">
+      <h1 class="page-title">Yêu Thích</h1>
+      <p class="page-subtitle">Các địa điểm yêu thích của bạn</p>
+    </div>
+
+    <!-- Tabs -->
+    <div class="tabs-section">
+      <button class="tab-btn"
+              [class.active]="activeTab === 'all'"
+              (click)="setActiveTab('all')">
+        Tất cả ({{bookmarks.length}})
+      </button>
+      <button class="tab-btn"
+              [class.active]="activeTab === 'cafe'"
+              (click)="setActiveTab('cafe')">
+        <ion-icon name="cafe"></ion-icon>
+        Cafe
+      </button>
+      <button class="tab-btn"
+              [class.active]="activeTab === 'homestay'"
+              (click)="setActiveTab('homestay')">
+        <ion-icon name="bed"></ion-icon>
+        Homestay
+      </button>
+    </div>
+
+    <!-- Bookmarks List -->
+    <div class="bookmarks-list" *ngIf="filteredBookmarks.length > 0">
+      <div class="bookmark-card" *ngFor="let item of filteredBookmarks" (click)="openDetail(item)">
+        <div class="card-image" [style.background-image]="'url(' + item.image + ')'">
+          <div class="card-type" [class]="item.type">
+            <ion-icon [name]="item.type === 'cafe' ? 'cafe' : 'bed'"></ion-icon>
+          </div>
+        </div>
+        <div class="card-content">
+          <div class="card-info">
+            <h3 class="card-title">{{item.name}}</h3>
+            <p class="card-location">
+              <ion-icon name="location-outline"></ion-icon>
+              {{item.location}}
+            </p>
+            <div class="card-meta">
+              <span class="rating">
+                <ion-icon name="star"></ion-icon>
+                {{item.rating}}
+              </span>
+              <span class="saved-date">Đã lưu {{item.savedDate}}</span>
+            </div>
+          </div>
+          <button class="remove-btn" (click)="removeBookmark(item, $event)">
+            <ion-icon name="heart"></ion-icon>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Empty State -->
+    <div class="empty-state" *ngIf="filteredBookmarks.length === 0">
+      <div class="empty-icon">
+        <ion-icon name="bookmark-outline"></ion-icon>
+      </div>
+      <h3>Chưa có địa điểm nào</h3>
+      <p>Hãy khám phá và lưu những địa điểm yêu thích của bạn</p>
+      <button class="explore-btn" (click)="goExplore()">
+        <ion-icon name="compass-outline"></ion-icon>
+        Khám phá ngay
+      </button>
+    </div>
+  </div>
+</ion-content>

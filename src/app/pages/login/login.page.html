@@ -2,7 +2,7 @@
   <div class="login-wrapper">
     <!-- Background Image -->
     <div class="bg-image">
-      <img src="assets/images/login.jpg" alt="Background">
+      <img src="assets/images/login.jpg" alt="Nền">
     </div>
 
     <!-- Content -->
@@ -29,19 +29,19 @@
         </div>
 
         <div class="input-group">
-          <label>PASSWORD</label>
+          <label>MẬT KHẨU</label>
           <ion-input type="password" placeholder="••••••••" [(ngModel)]="password"></ion-input>
         </div>
 
         <div class="forgot-password">
-          <a (click)="forgotPassword()">Forgot your password?</a>
+          <a (click)="forgotPassword()">Quên mật khẩu?</a>
         </div>
 
         <p class="error-message" *ngIf="errorMessage">{{ errorMessage }}</p>
         <p class="info-message" *ngIf="infoMessage">{{ infoMessage }}</p>
 
         <ion-button expand="block" class="login-btn" (click)="login()">
-          {{ isSubmitting ? 'Đang đăng nhập...' : 'Login' }}
+          {{ isSubmitting ? 'Đang đăng nhập...' : 'Đăng nhập' }}
         </ion-button>
 
         <ion-button expand="block" fill="outline" class="google-btn" (click)="loginWithGoogle()">
@@ -49,8 +49,8 @@
         </ion-button>
 
         <div class="register-link">
-          <span>Don't have an account? </span>
-          <a (click)="goToRegister()">Sign Up</a>
+          <span>Chưa có tài khoản? </span>
+          <a (click)="goToRegister()">Đăng ký</a>
         </div>
       </div>
     </div>

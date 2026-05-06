@@ -2,18 +2,18 @@
   <div class="register-wrapper">
     <!-- Background Image -->
     <div class="bg-image">
-      <img src="assets/images/register.jpeg" alt="Background">
+      <img src="assets/images/register.jpeg" alt="Nền">
     </div>
 
     <!-- Content -->
     <div class="register-content">
       <!-- Title -->
-      <h1 class="page-title">Register</h1>
+      <h1 class="page-title">Đăng ký</h1>
 
       <!-- Form -->
       <div class="form-container">
         <div class="input-group">
-          <label>FULL NAME</label>
+          <label>HỌ VÀ TÊN</label>
           <ion-input type="text" placeholder="Nguyễn Văn A" [(ngModel)]="fullName"></ion-input>
         </div>
 
@@ -23,32 +23,32 @@
         </div>
 
         <div class="input-group">
-          <label>PASSWORD</label>
+          <label>MẬT KHẨU</label>
           <ion-input type="password" placeholder="••••••••" [(ngModel)]="password"></ion-input>
         </div>
 
         <div class="input-group">
-          <label>PHONE NUMBER</label>
+          <label>SỐ ĐIỆN THOẠI</label>
           <ion-input type="tel" placeholder="0123 456 789" [(ngModel)]="phoneNumber"></ion-input>
         </div>
 
         <div class="input-group">
-          <label>ROLE</label>
+          <label>VAI TRÒ</label>
           <ion-select interface="popover" [(ngModel)]="role">
-            <ion-select-option value="user">User</ion-select-option>
-            <ion-select-option value="admin">Admin</ion-select-option>
+            <ion-select-option value="user">Người dùng</ion-select-option>
+            <ion-select-option value="admin">Quản trị viên</ion-select-option>
           </ion-select>
         </div>
 
         <p class="error-message" *ngIf="errorMessage">{{ errorMessage }}</p>
 
         <ion-button expand="block" class="register-btn" (click)="register()">
-          {{ isSubmitting ? 'Đang tạo tài khoản...' : 'Sign Up' }}
+          {{ isSubmitting ? 'Đang tạo tài khoản...' : 'Đăng ký' }}
         </ion-button>
 
         <div class="login-link">
-          <span>Already have an account? </span>
-          <a (click)="goToLogin()">Login</a>
+          <span>Đã có tài khoản? </span>
+          <a (click)="goToLogin()">Đăng nhập</a>
         </div>
       </div>
     </div>
